@@ -1,0 +1,114 @@
+import java.util.*;
+
+public class SimulatedFaceDetectionApp {
+
+    // Class to represent a detected face
+    static class Face {
+        int id;
+        int x, y, width, height;
+
+        Face(int id, int x, int y, int width, int height) {
+            this.id = id;
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+        }
+
+        public void display() {
+            System.out.println("Face #" + id + ": Position (" + x + "," + y + "), Size: " + width + "x" + height);
+        }
+    }
+
+    // Class to represent an image and its detected faces
+    static class ImageScanResult {
+        String imageName;
+        List<Face> faces;
+
+        ImageScanResult(String imageName, List<Face> faces) {
+            this.imageName = imageName;
+            this.faces = faces;
+        }
+
+        public void showResult() {
+            System.out.println("Image: " + imageName);
+            if (faces.isEmpty()) {
+                System.out.println("No faces detected.");
+            } else {
+                System.out.println("Faces detected: " + faces.size());
+                for (Face f : faces) {
+                    f.display();
+                }
+            }
+            System.out.println("----------------------------");
+        }
+    }
+
+    static Scanner sc = new Scanner(System.in);
+    static List<ImageScanResult> scanLog = new ArrayList<>();
+    static Random rand = new Random();
+
+    public static void main(String[] args) {
+        int choice;
+
+        System.out.println("=== Simulated Face Detection App ===");
+
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Upload and Scan Image");
+            System.out.println("2. Show Scan Log");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            switch (choice) {
+                case 1:
+                    scanImage();
+                    break;
+                case 2:
+                    showLog();
+                    break;
+                case 3:
+                    System.out.println("Thank you for using the app!");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Try again.");
+            }
+        } while (choice != 3);
+    }
+
+    // Simulate scanning an image
+    public static void scanImage() {
+        System.out.print("Enter image name: ");
+        String imageName = sc.nextLine();
+
+        int faceCount = rand.nextInt(6); // 0 to 5 faces
+        List<Face> faces = new ArrayList<>();
+
+        for (int i = 1; i <= faceCount; i++) {
+            int x = rand.nextInt(400);
+            int y = rand.nextInt(300);
+            int w = 50 + rand.nextInt(100);
+            int h = 50 + rand.nextInt(100);
+            faces.add(new Face(i, x, y, w, h));
+        }
+
+        ImageScanResult result = new ImageScanResult(imageName, faces);
+        result.showResult();
+        scanLog.add(result);
+    }
+
+    // Show all scan logs
+    public static void showLog() {
+        if (scanLog.isEmpty()) {
+            System.out.println("No scans yet.");
+            return;
+        }
+
+        System.out.println("\n=== Scan Log ===");
+        for (ImageScanResult result : scanLog) {
+            result.showResult();
+        }
+    }
+}
